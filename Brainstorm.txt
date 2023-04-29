@@ -1,0 +1,103 @@
+ Recherches pour editer un schedule
+  - softs d'electronique avec visu front haut et front bas .... trop de boulot d'adaptation
+  - softs que editent une crontab
+
+En fait on cree un script Python qui va generer les lignes crontab directement
+/home/buzenet/_HanPritcherCloud/Trucs_HowTos/_Trucs_Domotique/Creation_Schedules_piscine-2023/
+   - cree_schedules.py
+
+
+crontab-ui
+***************
+buzenet@marsulin:.../home/buzenet [9986 11:38:51]$ docker run -d -p 8000:8000 alseambusher/crontab-ui
+Unable to find image 'alseambusher/crontab-ui:latest' locally
+latest: Pulling from alseambusher/crontab-ui
+40e059520d19: Pull complete 
+6184203df49e: Pull complete 
+4f4fb700ef54: Pull complete 
+fb540c72c7fb: Pull complete 
+83fee7d9a7fa: Pull complete 
+bc3e89225745: Pull complete 
+f46064272c48: Pull complete 
+Digest: sha256:2eb78c62d9664aa95ad53ba10a266916f584fd78c667cecaf10800fc8d3654e0
+Status: Downloaded newer image for alseambusher/crontab-ui:latest
+f103d014576e0f0e8a117123470ff956b0af62e32a2f3e0350d88d5849e9d218
+buzenet@marsulin:.../home/buzenet [9987 11:39:08]$ docker logs -f f103d014576e0f0e8a117123470ff956b0af62e32a2f3e0350d88d5849e9d218
+2023-04-10 09:39:08,728 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2023-04-10 09:39:08,731 INFO supervisord started with pid 1
+2023-04-10 09:39:09,734 INFO spawned: 'crontab' with pid 6
+2023-04-10 09:39:09,736 INFO spawned: 'crontabui' with pid 7
+2023-04-10 09:39:11,081 INFO success: crontab entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-04-10 09:39:11,081 INFO success: crontabui entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+....
+
+===> http://marsulin:8000/
+   -> edite une crontabexport -> Json :
+
+buzenet@marsulin:.../buzenet.bragon_fs/Téléchargements [9987 11:50:26]$ cat crontab.db 
+{"name":"test","command":"start.sh","schedule":"*/3 * * * *","timestamp":"Mon Apr 10 2023 09:50:06 GMT+0000 (Coordinated Universal Time)","logging":"false","mailing":{},"saved":false,"_id":"jDNQiFAmZ6BNlXkQ"}
+buzenet@marsulin:.../buzenet.bragon_fs/Téléchargements [9988 11:50:30]$ 
+
+
+URLs
+***********
+
+Crontab UI 
+     - http://marsulin:8000/
+GitHub - alseambusher/crontab-ui: Easy and safe way to manage your crontab file 
+     - https://github.com/alseambusher/crontab-ui
+
+
+My favorite open source tool for using crontab | Opensource.com 
+     - https://opensource.com/article/22/5/cron-crontab-ui
+Page not found | Opensource.com 
+     - https://opensource.com/%5Bhttps%3A//github.com/alseambusher/crontab-ui%5D%28https%3A//github.com/alseambusher/crontab-ui%29
+VCRON 
+     - http://daniel.roche.free.fr/vcron/vcronGB.html
+github vcrontab-ui - Recherche Google 
+     - https://www.google.fr/search?source=hp&ei=QNl0XL6PGvaAur4PuKyKKA&q=github+vcrontab-ui&btnK=Google+Search&oq=tls+v1.3+site%3Dyoutube&gs_l=psy-ab.3..33i160.1867.1867..3520...0.0..0.97.97.1......0....2j1..gws-wiz.....0.evOOPDRl3t4
+GitHub - alseambusher/crontab-ui: Easy and safe way to manage your crontab file 
+     - https://github.com/alseambusher/crontab-ui
+
+Schedule tasks to run regularly in Ubuntu 18.04 with crontab | by Chi Thuc Nguyen | Medium 
+     - https://thucnc.medium.com/schedule-tasks-to-run-regularly-in-ubuntu-18-04-with-cronta-13227d669256
+Cron tips - Crontab.guru 
+     - https://crontab.guru/tips.html
+Mcron - GNU Project - Free Software Foundation 
+     - https://www.gnu.org/software/mcron/
+crontab every 2 minutes - Recherche Google 
+     - https://www.google.fr/search?source=hp&ei=QNl0XL6PGvaAur4PuKyKKA&q=crontab+every+2+minutes&btnK=Google+Search&oq=tls+v1.3+site%3Dyoutube&gs_l=psy-ab.3..33i160.1867.1867..3520...0.0..0.97.97.1......0....2j1..gws-wiz.....0.evOOPDRl3t4
+Cron job every 2 minutes 
+     - https://crontab.guru/every-2-minutes
+
+
+python chronogram editor - Recherche Google 
+     - https://www.google.fr/search?q=python+++chronogram+editor&biw=1194&bih=1048&sxsrf=APwXEde0tGA5U3jJH1EmW49NihO94OvhzQ%3A1681117796851&ei=ZNIzZObPM7fZkdUP76uioA8&ved=0ahUKEwjmke3o-57-AhW3bKQEHe-VCPQQ4dUDCA8&uact=5&oq=python+++chronogram+editor&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIEMgUIABCiBDoKCAAQRxDWBBCwAzoGCAAQBxAeOggIABAHEB4QDzoICAAQBxAeEAo6CAgAEAgQBxAeOgwIABAIEAcQHhAPEAo6BwgAEA0QgAQ6CAgAEAgQHhANOgYIABAIEB46BQghEKABOgYIABAWEB46BwghEKABEApKBAhBGABQ-QdY7kNg4UVoBHABeACAAVOIAeIHkgECMTaYAQCgAQHIAQjAAQE&sclient=gws-wiz-serp#imgrc=fXQ3m3U9CDE24M&imgdii=9kXmJeZLfeeKzM
+dessiner un chronogramme / Création graphique, musicale et vidéo / Forum Ubuntu-fr.org 
+     - https://forum.ubuntu-fr.org/viewtopic.php?id=388503
+Chronogramme — Wikipédia 
+     - https://fr.wikipedia.org/wiki/Chronogramme
+DrawTiming Samples 
+     - https://drawtiming.sourceforge.net/samples.html
+ElettroLinux – …because with GNU/Linux you can! 
+     - https://elettrolinux.com/
+chronogram · PyPI 
+     - https://pypi.org/project/chronogram/
+적분의 언어 연구소 ILAB 
+     - https://lab.bab2min.pe.kr/
+chronogram/example.py at master · bab2min/chronogram · GitHub 
+     - https://github.com/bab2min/chronogram/blob/master/example.py
+Hitchhiker's Guide to the WaveDrom (Part 2) 
+     - https://wavedrom.com/tutorial2.html
+Téléchargement de manivelle pour Linux 
+     - https://www.onworks.net/fr/software/linux/app-crank
+Chronogram Editor download | SourceForge.net 
+     - https://sourceforge.net/projects/chronogramedito/
+Page not found - SourceForge.net 
+     - https://sourceforge.net/projects/chronogramedito/Digital%20chronogram%20editor
+crontab graphical editor - Recherche Google 
+     - https://www.google.fr/search?q=crontab+graphical+editor&sxsrf=APwXEdeiNbz4v1ywzVhkIfFXwcJplp0icA%3A1681118126409&ei=rtMzZJHLGMSvkdUP88WwyAg&ved=0ahUKEwiR2v-F_Z7-AhXEV6QEHfMiDIkQ4dUDCA8&uact=5&oq=crontab+graphical+editor&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIEMgUIABCiBDIFCAAQogQyBQgAEKIEOgoIABBHENYEELADOgoIABCKBRCwAxBDOgcIABANEIAEOgYIABAHEB46BggAEB4QDToICAAQHhANEA86BwgjELACECc6CAgAEB4QDRAKOggIIRCgARDDBDoKCCEQoAEQwwQQCkoECEEYAFCeB1jMFGCnFmgBcAF4AIABXYgBigWSAQIxMJgBAKABAcgBCsABAQ&sclient=gws-wiz-serp
+Cron expression generator by Cronhub 
+     - https://crontab.cronhub.io/
+
+
