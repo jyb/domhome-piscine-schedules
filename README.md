@@ -2,7 +2,7 @@
 Gestion des schedules des periphs piscine
 
 https://github.com/jyb/domhome-piscine-schedules.git
-(https://github.com/jyb/domhome-piscine-schedules.git)
+
 
 ![Repos !](images/Image_piscine.png)
 
@@ -21,13 +21,8 @@ on cree un schedule pour :
 Selon la temperature piscine, on a 6 schedules differents pour la pompe principale et le Polaris:
 
 
-|--------------|-------|------|------|------|------|---------|------------|--------|-------|------------|---------|--------|
-| Temp piscine |     horaires start (B) et stop (E) de chaque vitesse (VX) et Polaris, d'apres schema Cathie 2023          |
-|--------------|-------|------|------|------|------|---------|------------|--------|-------|------------|---------|--------|
-|              |       |      |      |      |      |         |            |        |       |            |         |        |    
-|--------------|-------|------|------|------|------|---------|------------|--------|-------|------------|---------|--------|
+Horaires start (B) et stop (E) de chaque vitesse (VX) et Polaris, d'apres schema Cathie 2023
 
-|--------------|-------|------|------|------|------|---------|------------|--------|-------|------------|---------|--------|
 | Temp piscine | 00:00 | 03:00| 04:00| 06:00| 07:00|  08:00  |   11:30    |  12:00 | 14:00 |     14:30  |  20:00  |  22:00 |
 |--------------|-------|------|------|------|------|---------|------------|--------|-------|------------|---------|--------|
 |Temp < 10°C   |       |      | B.V1 | E.V1 |      |         |            |        |       |            |         |        |    
@@ -36,9 +31,9 @@ Selon la temperature piscine, on a 6 schedules differents pour la pompe principa
 |16 < Temp < 24|       |      |      |      |      |  B.V2   |  E.V2-B.V4 |  B.Pol | E.Pol |  E.V4-B.V3 |   E.V3  |        |
 |24 < Temp < 27|       |      |      |      |      |  B.V2   |  E.V2-B.V4 |  B.Pol | E.Pol |  E.V4-B.V3 |         |   E.V3 |
 |27 < Temp < 30|       |      | B.V1 |      |      |E.V1-B.V2|  E.V2-B.V4 |  B.Pol | E.Pol |  E.V4-B.V3 |         |   E.V3 |
-|--------------|-------|------|------|------|------|---------|------------|--------|-------|------------|---------|--------|
 
-NOTA: 
+
+**NOTA:** 
  - verifier que la pompe principale marche quand on active le Polaris, ou la pompe de chlore liquide 
    (et verifier que le Polaris ne fonctionne pas qd on delivre le chlore)
 
@@ -64,15 +59,13 @@ Debit : 1,5l/heure = 25ml/mn
  - la faire tourner plutot le matin
 Selon temperature et le type de traitement (Low, Medium ou High) on affiche la dose (ml) et le temps (minutes) :
 
-|-------------|----------|----------|----------|
 | Température |    Low   |  Medium  |   High   |
-|-------------|----------|----------|----------|
+|-------------|:--------:|:--------:|:--------:|
 |  T < 15°C   |    ---   |   ---    |    ---   |
 | 15 < T < 20 | 276 - 11 | 413 - 17 | 620 - 25 |
 | 20 < T < 25 | 332 - 13 | 498 - 20 | 747 - 30 |
 | 25 < T < 30 | 400 - 16 | 600 - 24 | 900 - 36 |
 |  T > 30 °C  | 468 - 19 | 702 - 28 |1053 - 42 |
-|-------------|----------|----------|----------|
 
 
 A propos de la variable schedule :
@@ -110,8 +103,16 @@ https://urllib3.readthedocs.io/en/stable/reference/index.html
 
 
 ## Histo
-![Avant on avait ceci :](images/Ancien_scheduler-2022.png)
+Avant on avait ceci :
+(images/Ancien_scheduler-2022.png)
 
 
 #### Notes de bas de page
 Voir https://forge.foundation4flight.solutions/gitlab/Akbar/PhebusGetData/-/blob/master/README.md
+Organizing information with tables - GitHub Docs 
+     - https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables
+Markdown | Tables | Codecademy 
+     - https://www.codecademy.com/resources/docs/markdown/tables
+drone-adm / aligo · GitLab 
+     - https://forge.foundation4flight.solutions/gitlab/drone-adm/aligo
+
