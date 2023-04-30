@@ -1,0 +1,104 @@
+[20230430_204951.972:    0-main-INFO] Démarrage ....
+[20230430_204951.972:    1-main-INFO] Mode debug : False
+[20230430_204951.973:    2-get_temp_domoticz-INFO] Recupere la temperature de l'eau de la piscine via Domoticz
+[20230430_204951.985:    3-main-INFO] Temperature : '18.6'
+[20230430_204951.985:    4-gen_schedule_par_temp-INFO] renvoie un schedule fonction d'une temperature 18.6
+[20230430_204951.986:    5-gen_schedule_par_temp-INFO] cherche temp '18.6' parmi les 7 schedules
+[20230430_204951.986:    6-gen_schedule_par_temp-INFO] OK plage 3
+[20230430_204951.986:    7-gen_schedule_par_temp-INFO] OK on a trouve it=3 desc 'temp entre 16°C et 24°C'
+[20230430_204951.987:    8-main-INFO] Schedule genere : '{ 'desc': 'temp entre 16°C et 24°C',
+  'duree_filtration_totale': '8 a 12',
+  'scheds': [ {'action': 'start', 'heure': '08', 'minutes': '00', 'objet': 'pompeV2'},
+              {'action': 'stop', 'heure': '11', 'minutes': '30', 'objet': 'pompeV2'},
+              {'action': 'start', 'heure': '11', 'minutes': '30', 'objet': 'pompeV4'},
+              {'action': 'stop', 'heure': '14', 'minutes': '30', 'objet': 'pompeV4'},
+              {'action': 'start', 'heure': '14', 'minutes': '30', 'objet': 'pompeV3'},
+              {'action': 'stop', 'heure': '20', 'minutes': '00', 'objet': 'pompeV3'},
+              {'action': 'start', 'heure': '12', 'minutes': '00', 'objet': 'polaris'},
+              {'action': 'stop', 'heure': '14', 'minutes': '00', 'objet': 'polaris'}],
+  'temp_max': '24',
+  'temp_min': '16',
+  'type': 'type4'}'
+[20230430_204951.987:    9-get_temps_dosage_selon_temp-INFO] renvoie le temps en minutes de dosage a appliquer selon la temperature 18.6
+[20230430_204951.987:   10-get_temps_dosage_selon_temp-INFO] cherche temp '18.6' parmi les 5 valeurs dosages
+[20230430_204951.987:   11-get_temps_dosage_selon_temp-INFO] OK plage 1
+[20230430_204951.987:   12-get_temps_dosage_selon_temp-INFO] OK on a trouve it=1 duree de dosage en minutes : 17
+[20230430_204951.987:   13-main-INFO] duree de dosage en minutes : 17
+[20230430_204951.987:   14-get_start_pompe_dans_sched_list-INFO] renvoie la premiere heure:minutes a laquelle la pompe principale est demarree
+trouve 8 items dans s2_list
+Cherche it = 0 objet = 'pompeV2' 
+==== it=0 action pas trouvee on a k='heure'
+==== it=0 action pas trouvee on a k='minutes'
+==== it=0 action pas trouvee on a k='objet'
+trouve start it=0 heure=08:00 obj='pompeV2'
+Cherche it = 1 objet = 'pompeV2' 
+Deja trouve, stop.
+Cherche it = 2 objet = 'pompeV4' 
+Deja trouve, stop.
+Cherche it = 3 objet = 'pompeV4' 
+Deja trouve, stop.
+Cherche it = 4 objet = 'pompeV3' 
+Deja trouve, stop.
+Cherche it = 5 objet = 'pompeV3' 
+Deja trouve, stop.
+Cherche it = 6 objet = 'polaris' 
+Deja trouve, stop.
+Cherche it = 7 objet = 'polaris' 
+Deja trouve, stop.
+Trouve pour pompe : mh = 8, mm = 0, mo = pompeV2, mi = 0
+[20230430_204951.987:   15-gen_schedule_chlore_par_temp_et_sched_gen-INFO] renvoie un schedule fonction d'une temperature 18.6 et du schedule principal
+<class 'dict'>
+sched_chlore
+[ {'action': 'start', 'heure': '08', 'minutes': '10', 'objet': 'chlore'},
+  {'action': 'stop', 'heure': '08', 'minutes': '27', 'objet': 'chlore'}]
+sched_courant
+{ 'desc': 'temp entre 16°C et 24°C',
+  'duree_filtration_totale': '8 a 12',
+  'scheds': [ {'action': 'start', 'heure': '08', 'minutes': '00', 'objet': 'pompeV2'},
+              {'action': 'stop', 'heure': '11', 'minutes': '30', 'objet': 'pompeV2'},
+              {'action': 'start', 'heure': '11', 'minutes': '30', 'objet': 'pompeV4'},
+              {'action': 'stop', 'heure': '14', 'minutes': '30', 'objet': 'pompeV4'},
+              {'action': 'start', 'heure': '14', 'minutes': '30', 'objet': 'pompeV3'},
+              {'action': 'stop', 'heure': '20', 'minutes': '00', 'objet': 'pompeV3'},
+              {'action': 'start', 'heure': '12', 'minutes': '00', 'objet': 'polaris'},
+              {'action': 'stop', 'heure': '14', 'minutes': '00', 'objet': 'polaris'}],
+  'temp_max': '24',
+  'temp_min': '16',
+  'type': 'type4'}
+NOUVEAU sched_courant
+{ 'desc': 'temp entre 16°C et 24°C',
+  'duree_filtration_totale': '8 a 12',
+  'scheds': [ {'action': 'start', 'heure': '08', 'minutes': '00', 'objet': 'pompeV2'},
+              {'action': 'stop', 'heure': '11', 'minutes': '30', 'objet': 'pompeV2'},
+              {'action': 'start', 'heure': '11', 'minutes': '30', 'objet': 'pompeV4'},
+              {'action': 'stop', 'heure': '14', 'minutes': '30', 'objet': 'pompeV4'},
+              {'action': 'start', 'heure': '14', 'minutes': '30', 'objet': 'pompeV3'},
+              {'action': 'stop', 'heure': '20', 'minutes': '00', 'objet': 'pompeV3'},
+              {'action': 'start', 'heure': '12', 'minutes': '00', 'objet': 'polaris'},
+              {'action': 'stop', 'heure': '14', 'minutes': '00', 'objet': 'polaris'},
+              {'action': 'start', 'heure': '08', 'minutes': '10', 'objet': 'chlore'},
+              {'action': 'stop', 'heure': '08', 'minutes': '27', 'objet': 'chlore'}],
+  'temp_max': '24',
+  'temp_min': '16',
+  'type': 'type4'}
+[20230430_204951.987:   16-gen_crontab-INFO] On cree une chaine crontab depuis l'objet Schedule trouvé
+[20230430_204951.987:   17- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+[20230430_204951.987:   18-main-INFO] Crontab generee : '## Schedule genere le 2023/04/30 a 20:49 par buzenet@marsulin:/home/scripts
+## Temp mesuree : 18.6
+## Schedule pour temps entre 16 et 24
+## desc du schedule de type type4 : temp entre 16°C et 24°C
+## nb d'heures de filtration : 8 a 12
+##
+
+00 08 * * * /home/scripts/domhome-piscine-sched-pompeV2-start.sh
+30 11 * * * /home/scripts/domhome-piscine-sched-pompeV2-stop.sh
+30 11 * * * /home/scripts/domhome-piscine-sched-pompeV4-start.sh
+30 14 * * * /home/scripts/domhome-piscine-sched-pompeV4-stop.sh
+30 14 * * * /home/scripts/domhome-piscine-sched-pompeV3-start.sh
+00 20 * * * /home/scripts/domhome-piscine-sched-pompeV3-stop.sh
+00 12 * * * /home/scripts/domhome-piscine-sched-polaris-start.sh
+00 14 * * * /home/scripts/domhome-piscine-sched-polaris-stop.sh
+10 08 * * * /home/scripts/domhome-piscine-sched-chlore-start.sh
+27 08 * * * /home/scripts/domhome-piscine-sched-chlore-stop.sh
+'
+[20230430_204951.987:   19- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*

@@ -98,7 +98,7 @@ Pas besoin de venv python, pas de modules particuliers
 Ex de recup Temp piscine via Domoticz :
 TEMP_PISCINE=$(curl -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=devices&rid=108" | jq '.result[0].Data' | sed -e 's/"//g' | awk '{print $1}') ; echo "$TEMP_PISCINE" 
 
-Ex de lancement du Polaris :
+Ex de lancement et arret du Polaris :
 curl  -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=command&param=switchlight&idx=999&switchcmd=On"
 curl  -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=command&param=switchlight&idx=999&switchcmd=Off"
 
@@ -1048,7 +1048,12 @@ print(display_schedule(sched_courant))
 macrontab = gen_crontab(sched_courant, temp)
 
 sep()
-_mylog(my_function_name, "INFO", "Crontab generee : '{}'".format(macrontab))
+crontab_fic = "crontabs/crontab-{}.txt".format(timestamp())
+_mylog(my_function_name, "INFO", "Crontab generee dans fichier '{}':\n '{}'".format(crontab_fic, macrontab))
+with open(crontab_fic, "w") as fp:
+    fp.write(macrontab)
+
+
 sep()
 
 

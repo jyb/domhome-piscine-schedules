@@ -97,6 +97,11 @@ Ex de recup Temp piscine via Domoticz :
 TEMP_PISCINE=$(curl -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=devices&rid=108" | jq '.result[0].Data' | sed -e 's/"//g' | awk '{print $1}') ; echo "$TEMP_PISCINE" 
 
 
+Ex de lancement et arret du Polaris :
+curl  -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=command&param=switchlight&idx=999&switchcmd=On"
+curl  -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=command&param=switchlight&idx=999&switchcmd=Off"
+
+
 https://pypi.org/project/urllib3/
 https://urllib3.readthedocs.io/en/stable/reference/index.html
 

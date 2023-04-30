@@ -1,0 +1,17 @@
+## Schedule genere le 2023/04/30 a 20:56 par buzenet@marsulin:/home/scripts
+## Temp mesuree : 18.6
+## Schedule pour temps entre 16 et 24
+## desc du schedule de type type4 : temp entre 16°C et 24°C
+## nb d'heures de filtration : 8 a 12
+##
+
+00 08 * * * /home/scripts/domhome-piscine-sched-pompeV2-start.sh
+30 11 * * * /home/scripts/domhome-piscine-sched-pompeV2-stop.sh
+30 11 * * * /home/scripts/domhome-piscine-sched-pompeV4-start.sh
+30 14 * * * /home/scripts/domhome-piscine-sched-pompeV4-stop.sh
+30 14 * * * /home/scripts/domhome-piscine-sched-pompeV3-start.sh
+00 20 * * * /home/scripts/domhome-piscine-sched-pompeV3-stop.sh
+00 12 * * * /home/scripts/domhome-piscine-sched-polaris-start.sh
+00 14 * * * /home/scripts/domhome-piscine-sched-polaris-stop.sh
+10 08 * * * /home/scripts/domhome-piscine-sched-chlore-start.sh
+27 08 * * * /home/scripts/domhome-piscine-sched-chlore-stop.sh
