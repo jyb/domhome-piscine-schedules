@@ -98,6 +98,10 @@ Pas besoin de venv python, pas de modules particuliers
 Ex de recup Temp piscine via Domoticz :
 TEMP_PISCINE=$(curl -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=devices&rid=108" | jq '.result[0].Data' | sed -e 's/"//g' | awk '{print $1}') ; echo "$TEMP_PISCINE" 
 
+Ex de lancement du Polaris :
+curl  -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=command&param=switchlight&idx=999&switchcmd=On"
+curl  -u "bougon:passwd" -s  "http://dgbaley:8080/json.htm?type=command&param=switchlight&idx=999&switchcmd=Off"
+
 
 https://pypi.org/project/urllib3/
 https://urllib3.readthedocs.io/en/stable/reference/index.html
@@ -838,8 +842,9 @@ def gen_crontab( sched, temp ):
     ##      ..../xxx-pompeV2-start.sh
     
     ## sched["scheds"]
-    rep_scripts = monrepertoire()  ## "/home/scripts"
-    rac_script = "sched"
+    ## rep_scripts = monrepertoire() 
+    rep_scripts = "/home/scripts"
+    rac_script = "domhome-piscine-sched"
     ext_script = "sh"
     
     crontab_str = """## Schedule genere le {} a {} par {}:{}
@@ -861,6 +866,12 @@ def gen_crontab( sched, temp ):
         sep_dbg()
         _msg_dbg("{} {} -> {} sur {}".format(sched["scheds"][it]["heure"], sched["scheds"][it]["minutes"], 
                                           sched["scheds"][it]["action"], sched["scheds"][it]["objet"]))
+        ## /nethomes/buzenet.bragon_fs/_HanPritcherCloud/Trucs_HowTos/_Trucs_Domotique/Creation_Schedules_piscine-2023/domhome-piscine-schedules/sched-pompeV3-stop.sh
+        ## script = "{}/{}-{}-{}.{}".format(rep_scripts, rac_script, sched["scheds"][it]["objet"], sched["scheds"][it]["action"], ext_script)
+        
+        ## /home/scripts/domhome-piscine-sched.sh PompeIntellifowV3 On
+
+        
         script = "{}/{}-{}-{}.{}".format(rep_scripts, rac_script, sched["scheds"][it]["objet"], sched["scheds"][it]["action"], ext_script)
         crontab_str += """{} {} * * * {}
 """.format(sched["scheds"][it]["minutes"], sched["scheds"][it]["heure"], script)
