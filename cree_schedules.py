@@ -64,8 +64,13 @@ Selon temperature et le type de traitement (Low, Medium ou High) on affiche la d
 |  T > 30 °C  | 468 - 19 | 702 - 28 |1053 - 42 |
 |-------------|----------|----------|----------|
 
+Arbitrairement, on choisit le mode "Medium"
+On a deja determine un schedule principal (pompe principale et Polaris) selon la temperature, 
+on va ajouter un schedule pour la pompe Chlore qui prend en compte qd la pompe principale et le Polaris sont actives
+-> schedule
 
-A propos de la variable schedule :
+
+A propos de la variable schedule (schedule pompe principale et Polaris) :
     Au depart on a une liste de schedules ; chacun est un tableau de dict ;
     chaque dict est un front montant ou descendant applique a un objet a une heure/minutes donnes
     donne ici en hard code, il y a 2 fonctions de chargement ou creation d'un JSON, donc on peut partir d'un JSON externe si besoin
@@ -173,6 +178,9 @@ class MonEnv:
 
 """
    schedule : voir explications plus haut et dans README.md du projet
+   pompre principale et Polaris
+   version hard-codee, peut-etre surchargee par un fichier JSON
+   voir les fonctions gen_schedule_file_json() et gen_schedule_from_file() 
 """
 schedule = [
    {
@@ -462,6 +470,48 @@ schedule = [
 
 ]
 
+"""
+   Tableau de ce qu'il faut delivrer en Chlore selon la temperature
+
+"""
+infos_dosage_chlore = [
+    {
+    "type": "hiver",
+    "desc": "temp inf a 15°C", 
+    "duree_dose_total": "0",
+    "temp_min": "-100",
+    "temp_max": "15",
+    },
+    {
+    "type": "type2",
+    "desc": "temp entre 15°C et 20°C", 
+    "duree_dose_total": "17",
+    "temp_min": "15",
+    "temp_max": "20",
+    },
+    {
+    "type": "type3",
+    "desc": "temp entre 20°C et 25°C", 
+    "duree_dose_total": "20",
+    "temp_min": "20",
+    "temp_max": "25",
+    },
+    {
+    "type": "type4",
+    "desc": "temp entre 25°C et 30°C", 
+    "duree_dose_total": "24",
+    "temp_min": "25",
+    "temp_max": "30",
+    },
+    {
+    "type": "type5",
+    "desc": "temp sup a 30°C", 
+    "duree_dose_total": "28",
+    "temp_min": "30",
+    "temp_max": "100",
+    },
+
+]
 
 
 ## -+- FONCTIONS UTILES -+-
@@ -609,8 +659,9 @@ def gen_schedule_par_temp(temp):
     """
         gen_schedule_par_temp(temp): renvoie un schedule fonction d'une temperature
         arg : temperature
-        returns dict = schedule
+        return: dict = schedule
         en pratique le schedule renvoye est un sous-item de schedule
+        TODO: et si on ne trouve pas ? en fait cela veut dire que la structure d'entree est pourrie
     """
     my_function_name = get_function_name()
     _mylog(my_function_name, "INFO", "renvoie un schedule fonction d'une temperature {}".format(temp))
@@ -622,7 +673,7 @@ def gen_schedule_par_temp(temp):
     while it < nb_items:
         sep_dbg()
         _msg_dbg(type(schedule[it]))
-        display_schedule(schedule[it])
+        _msg_dbg(display_schedule(schedule[it]))
 
         if temp >= float(schedule[it]["temp_min"]) and temp < float(schedule[it]["temp_max"]):
             _mylog(my_function_name, "INFO", "OK plage {}".format(it))
@@ -633,6 +684,142 @@ def gen_schedule_par_temp(temp):
         it += 1
     _mylog(my_function_name, "INFO", "OK on a trouve it={} desc '{}'".format(it, sched["desc"]))
     return(sched)
+
+def get_temps_dosage_selon_temp(temp):
+    """
+       get_temps_dosage_selon_temp(temp): renvoie le temps en minutes de dosage a appliquer selon la temperature
+       info deduite de la liste de dict infos_dosage_chlore
+       return: temps en minutes : duree_dosage
+       TODO: et si on ne trouve pas ? en fait cela veut dire que la structure d'entree est pourrie
+    """
+    my_function_name = get_function_name()
+    _mylog(my_function_name, "INFO", "renvoie le temps en minutes de dosage a appliquer selon la temperature {}".format(temp))
+    nb_items = len(infos_dosage_chlore)
+    _mylog(my_function_name, "INFO", "cherche temp '{}' parmi les {} valeurs dosages".format(temp, nb_items))
+    it = 0
+    while it < nb_items:
+        sep_dbg()
+        _msg_dbg(type(infos_dosage_chlore[it]))
+        _msg_dbg(display_schedule(infos_dosage_chlore[it]))
+
+        if temp >= float(infos_dosage_chlore[it]["temp_min"]) and temp < float(infos_dosage_chlore[it]["temp_max"]):
+            _mylog(my_function_name, "INFO", "OK plage {}".format(it))
+            duree_dosage = infos_dosage_chlore[it]["duree_dose_total"]
+            break
+        else:
+            _msg_dbg("NON pas dans la plage {}".format(it))
+        it += 1
+    _mylog(my_function_name, "INFO", "OK on a trouve it={} duree de dosage en minutes : {}".format(it, duree_dosage))
+    return(int(duree_dosage))
+
+def get_start_pompe_dans_sched_list(schedule1):
+    """
+       get_start_pompe_dans_sched_list(sched_list): renvoie la premiere heure:minutes a laquelle la pompe principale est demarree
+       return: (heure, minutes, objet)   -> objet parmi V1, V2, ... 
+       schedule1 est en pratique le schedule courant trouve par les autres recherches
+       TODO: on prend le 1er item qui fait start, normalement c'est une pompe et pas le Polaris, mais bon c'est pas rigourteux ...
+
+       Exemple :
+        [{'action': 'start', 'heure': '08', 'minutes': '00', 'objet': 'pompeV2'},
+        {'action': 'stop', 'heure': '11', 'minutes': '30', 'objet': 'pompeV2'},
+        {'action': 'start', 'heure': '11', 'minutes': '30', 'objet': 'pompeV4'},
+        {'action': 'stop', 'heure': '14', 'minutes': '30', 'objet': 'pompeV4'},
+        {'action': 'start', 'heure': '14', 'minutes': '30', 'objet': 'pompeV3'},
+        {'action': 'stop', 'heure': '20', 'minutes': '00', 'objet': 'pompeV3'},
+        {'action': 'start', 'heure': '12', 'minutes': '00', 'objet': 'polaris'},
+        {'action': 'stop', 'heure': '14', 'minutes': '00', 'objet': 'polaris'}]
+    """
+    my_function_name = get_function_name()
+    _mylog(my_function_name, "INFO", "renvoie la premiere heure:minutes a laquelle la pompe principale est demarree")
+
+    s2_list = schedule1["scheds"] ## -> liste de schedules, le reste des champs de schedule1 n'est pas interressant
+    nb_items = len(s2_list)
+    it=0
+    monitem = -1
+    monheure = -1
+    mesminutes = -1
+    monobjet = "ZZ"
+    trouve = False
+
+    print("trouve {} items dans s2_list".format(nb_items))
+    while it < nb_items:
+        print("Cherche it = {} objet = '{}' ".format(it, s2_list[it]["objet"]))
+        if trouve:
+            print("Deja trouve, stop.")
+        else:
+    
+            for k in s2_list[it].keys():
+                if k == "action":
+                    if s2_list[it]["action"] == "start":
+                        print("trouve start it={} heure={}:{} obj='{}'".format(it, s2_list[it]["heure"], s2_list[it]["minutes"], s2_list[it]["objet"]))
+                        monitem = it
+                        monheure = s2_list[it]["heure"]
+                        mesminutes = s2_list[it]["minutes"]
+                        monobjet = s2_list[it]["objet"]
+                        trouve = True
+                        break
+
+                    else:
+                        print("trouve action '{}' it={}".format(s2_list[it]["action"], it))
+                else:
+                    print("==== it={} action pas trouvee on a k='{}'".format(it, k))
+        it += 1
+
+    return (int(monheure), int(mesminutes), monobjet, monitem)
+
+
+
+
+def gen_schedule_chlore_par_temp_et_sched_gen(temp, h_depart, mn_depart, temps_dosage, sched_courant):
+    """
+        gen_schedule_chlore_par_temp_et_sched_gen(temp): renvoie un schedule fonction d'une temperature
+              et du schedule principal deja calcule
+        arg : temperature
+              h_depart : heure effective
+              mn_depart : minutes effectives
+              temps_dosage
+              schedule_principal
+        returns dict = schedule_chlore
+        il faut faire en sorte que la pompe chlore ne debite pas qd Polaris est ON ou pompe principale est OFF
+        Astuce : le Polaris n'est pas le matin, le plus simple est de debiyter le matin dans les heures de la pompe
+        TODO: temp : on s'en f... un peu dans cette routine
+        Attention : on recoit les heures,minutes et temps_dosage comme des entiers, il faut reformatter pour genere des schedules a 2 caracteres
+
+     """
+    my_function_name = get_function_name()
+    _mylog(my_function_name, "INFO", "renvoie un schedule fonction d'une temperature {} et du schedule principal".format(temp))
+    
+    """
+    Exemple :
+    sched_chlore = [
+        {'action': 'start', 'heure': '12', 'minutes': '10', 'objet': 'chlore'},
+        {'action': 'stop', 'heure': '12', 'minutes': '00', 'objet': 'chlore'},
+        ]
+    """
+    sched_chlore = list()
+    mn_fin = mn_depart + temps_dosage
+    h_fin = h_depart
+    if mn_fin >= 60:
+        mn_fin -=60
+        h_fin = h_depart + 1
+
+    d1 = dict()
+    print(type(d1))
+    d1["action"] = 'start'
+    d1["heure"] = f'{h_depart:02d}'
+    d1["minutes"] = f'{mn_depart:02d}'
+    d1["objet"] = 'chlore'
+    
+    sched_chlore.append(d1)
+    d1 = dict()
+    d1['action'] = 'stop'
+    d1['heure'] = f'{h_fin:02d}'
+    d1['minutes'] = f'{mn_fin:02d}'
+    d1['objet'] = 'chlore'
+    
+    sched_chlore.append(d1)
+
+    return (sched_chlore)
 
 
 def gen_crontab( sched, temp ):
@@ -750,8 +937,11 @@ _mylog(my_function_name, "INFO", "Démarrage ....")
 
 _mylog(my_function_name, "INFO", "Mode debug : {}".format(mode_debug))
 
+## ==============================
+## >>>>>  DEBUG BLOCK
 
 # mode_debug = True
+# mode_debug = not mode_debug
 # _mylog(my_function_name, "INFO", "Mode debug : {}".format(mode_debug))
 
 
@@ -760,22 +950,17 @@ if mode_debug:
     _msg_dbg("pwd : '{}'".format(monenv.get_pwd()))
     _msg_dbg("repscripts : '{}'".format(monenv.get_scripts_dir()))
 
-## check qqs valeurs
-## mode_debug = not mode_debug
+    ## check qqs valeurs
+    ## mode_debug = not mode_debug
 
-if mode_debug:
     display_schedule(schedule)
     # _msg_dbg(type(schedule))
     # pprint.pprint(schedule)
     # _msg_dbg(type(schedule[2]["scheds"][1]))
     # _msg_dbg((schedule[2]["scheds"][1]))
 
-## mode_debug = not mode_debug
+    ## Test de chargement et sauvegarde du schedule
 
-
-## Test de chargement et sauvegarde du schedule
-
-if mode_debug:
     json_file_saved1 = "schedules1.json"
     json_file_orig = "schedules.json"
     _msg_dbg("Test : sauve schedule vers '{}'".format(json_file_saved1))
@@ -799,22 +984,60 @@ if mode_debug:
 """.format(json_file_orig, display_schedule(schedule2)))
 
     sep_dbg()
+## <<<<<  DEBUG BLOCK
+## ==============================
 
 
+# -=- Recup temerature via Domoticz
 temp = get_temp_domoticz(domoticz_temp_device_rid)
 
+## DEBUG : forcer d'autres temps pour verifier les algos
 ## temp = 9.9
 ## temp = 10
 
 _mylog(my_function_name, "INFO", "Temperature : '{}'".format(temp))
 
+# -=- Creer schedule pompe principale et Polaris
 sched_courant = gen_schedule_par_temp(temp)
-_msg_dbg(display_schedule(sched_courant))
+_mylog(my_function_name, "INFO", "Schedule genere : '{}'".format(display_schedule(sched_courant)))
 
+# -=- Generer le schedule de la pompe chlore
+duree_dosage = get_temps_dosage_selon_temp(temp)
+_mylog(my_function_name, "INFO", "duree de dosage en minutes : {}".format(duree_dosage))
+
+## On recherche dans sched_courant le start de pompe le matin < start de polaris
+## Attention : on recoit des int pour heures et minutes, il faudra ecrire dans ls scheduling '09' au lieu de '9' par exemple
+
+(mh, mm, mo, mi) = get_start_pompe_dans_sched_list(sched_courant)
+
+print("Trouve pour pompe : mh = {}, mm = {}, mo = {}, mi = {}".format(mh, mm, mo, mi))
+h_depart = mh
+mn_depart = int(mm) + 10
+if mn_depart >= 60:
+    mn_depart -=60
+    h_depart +=1
+
+
+sched_chlore = gen_schedule_chlore_par_temp_et_sched_gen(temp, h_depart, mn_depart, duree_dosage, sched_courant)
+print("sched_chlore")
+print(display_schedule(sched_chlore))
+print("sched_courant")
+print(display_schedule(sched_courant))
+
+## Maintenant il suffit d'integrer sched_chlore dans les scheds de sched_courant
+## TODO : pas joli, mais bon ....
+sched_courant["scheds"].append(sched_chlore[0])
+sched_courant["scheds"].append(sched_chlore[1])
+print("NOUVEAU sched_courant")
+print(display_schedule(sched_courant))
+
+
+# -=- Generer la crontab complete
+# TODO: integrer Pompe chlore
 macrontab = gen_crontab(sched_courant, temp)
 
 sep()
-print(macrontab)
+_mylog(my_function_name, "INFO", "Crontab generee : '{}'".format(macrontab))
 sep()
 
 
