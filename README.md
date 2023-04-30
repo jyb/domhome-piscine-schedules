@@ -108,11 +108,13 @@ Avant on avait ceci :
 
 
 #### Notes de bas de page
-Voir https://forge.foundation4flight.solutions/gitlab/Akbar/PhebusGetData/-/blob/master/README.md
-Organizing information with tables - GitHub Docs 
-     - https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables
-Markdown | Tables | Codecademy 
-     - https://www.codecademy.com/resources/docs/markdown/tables
-drone-adm / aligo · GitLab 
-     - https://forge.foundation4flight.solutions/gitlab/drone-adm/aligo
+Voir :
+ - Autre ex de MarkDown 
+      - https://forge.foundation4flight.solutions/gitlab/Akbar/PhebusGetData/-/blob/master/README.md
+ - drone-adm / aligo · GitLab 
+      - https://forge.foundation4flight.solutions/gitlab/drone-adm/aligo
+ - Organizing information with tables - GitHub Docs 
+      - https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables
+ - Markdown | Tables | Codecademy 
+      - https://www.codecademy.com/resources/docs/markdown/tables
 
