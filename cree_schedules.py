@@ -9,7 +9,8 @@
 
     JYB - 2023/04/10
 
-fonction de la temperature piscine (idealement une moyenne de la veille a la meme heure ou a la meme date l'annee d'avant, TBC),
+    
+Fonction de la temperature piscine (idealement une moyenne de la veille a la meme heure ou a la meme date l'annee d'avant, TBC),
 on cree un schedule pour :
    - la pompe principale de la piscine : 4 vitesses (V1 V2 V3 V4) et horloge pour chacune
    - la pompe de Chlore liquide
@@ -114,6 +115,8 @@ import pprint
 import inspect
 import logging
 import traceback
+import getpass
+import socket
 
 
 ## idx ou rid du dispositif (device) de la sonde de temperature dans Domoticz
@@ -169,7 +172,7 @@ class MonEnv:
 
 
 """
-   schedule : voir explication plus haut et dans README.md du projet
+   schedule : voir explications plus haut et dans README.md du projet
 """
 schedule = [
    {
@@ -461,7 +464,7 @@ schedule = [
 
 
 
-## -+- FONCTIONS -+-
+## -+- FONCTIONS UTILES -+-
 def arret_msg( msg ):
     """
        arret_msg( msg ): Arrete le programme avec ce message
@@ -479,6 +482,24 @@ def file_exists(path):
         return False
     return True
 
+def aujourdhui():
+    """
+       aujourdhui(): Generate a string as timestamp : YYYY/MM/DD
+    """
+    now = time.time()
+    localtime = time.localtime(now)
+    milliseconds = '%03d' % int((now - int(now)) * 1000)
+    return time.strftime('%Y/%m/%d', localtime)
+
+def monheure():
+    """
+       monheure(): Generate a string as timestamp : HH:MM
+    """
+    now = time.time()
+    localtime = time.localtime(now)
+    milliseconds = '%03d' % int((now - int(now)) * 1000)
+    return time.strftime('%H:%M', localtime)
+
 def timestamp():
     """
        timestamp(): Generate a string as timestamp : YYYYMMDD_HHMMSS.sss
@@ -487,6 +508,16 @@ def timestamp():
     localtime = time.localtime(now)
     milliseconds = '%03d' % int((now - int(now)) * 1000)
     return time.strftime('%Y%m%d_%H%M%S.', localtime) + milliseconds
+
+def quisuisje():
+    return(getpass.getuser())
+
+def mamachine():
+    return(socket.gethostname())
+
+def monrepertoire():
+    return  os.getcwd()
+
 
 def server_help():
     """
@@ -513,6 +544,14 @@ def _mylog(caller, severity, msg):
 
 
 
+def sep():
+    _mylog(" ", "-", "=*"*40)
+
+
+def sep_dbg():
+    if mode_debug:
+        _mylog(" ", "-", "=*"*40)
+
 
 def _msg_dbg(message):
     """
@@ -528,14 +567,13 @@ def get_function_name():
 
 
 
-def sep():
-    _mylog(" ", "-", "=*"*40)
-
 def get_env():
     """
        get_env(): Recupere qqs variables d'environnement, les stocke en interne
     """
 
+
+## -+- FONCTIONS PROJET -+-
 def gen_schedule_from_file(fic):
     """
         gen_schedule_from_file(fic): Genere une liste de schedules depuis un fichier JSON 
@@ -579,21 +617,21 @@ def gen_schedule_par_temp(temp):
     sched = list()
 
     nb_items = len(schedule)
-    print("cherche temp '{}' parmi les {} schedules".format(temp, nb_items))
+    _mylog(my_function_name, "INFO", "cherche temp '{}' parmi les {} schedules".format(temp, nb_items))
     it = 0
     while it < nb_items:
-        sep()
-        print(type(schedule[it]))
-        pprint.pprint(schedule[it])
+        sep_dbg()
+        _msg_dbg(type(schedule[it]))
+        display_schedule(schedule[it])
 
         if temp >= float(schedule[it]["temp_min"]) and temp < float(schedule[it]["temp_max"]):
-            print("OK plage {}".format(it))
+            _mylog(my_function_name, "INFO", "OK plage {}".format(it))
             sched = schedule[it]
             break
         else:
-            print("NON pas dans la plage {}".format(it))
+            _msg_dbg("NON pas dans la plage {}".format(it))
         it += 1
-    print("OK on a trouve it={} desc '{}'".format(it, sched["desc"]))
+    _mylog(my_function_name, "INFO", "OK on a trouve it={} desc '{}'".format(it, sched["desc"]))
     return(sched)
 
 
@@ -605,25 +643,27 @@ def gen_crontab( sched, temp ):
     """
     my_function_name = get_function_name()
     _mylog(my_function_name, "INFO", "On cree une chaine crontab depuis l'objet Schedule trouvé")
-    createur = "moimoi"
-    date_creation = "2023/04/10"
-    heure_creation = "18h45"
+    createur = "{}@{}".format(quisuisje(),mamachine()) ## "moimoi@mamachine"
+
+    date_creation = aujourdhui() ## "2023/04/10"
+    heure_creation = monheure() ## "18:45"
     ## script = rep_scripts/rac_script-objet-action.sh
     ##      ..../xxx-pompeV2-start.sh
     
     ## sched["scheds"]
-    rep_scripts = "/home/scripts"
+    rep_scripts = monrepertoire()  ## "/home/scripts"
     rac_script = "sched"
     ext_script = "sh"
     
-    crontab_str = """## Schedule genere le {} a {} par {}
+    crontab_str = """## Schedule genere le {} a {} par {}:{}
 ## Temp mesuree : {}
 ## Schedule pour temps entre {} et {}
 ## desc du schedule de type {} : {}
 ## nb d'heures de filtration : {}
 ##
 
-""".format(date_creation, heure_creation, createur, temp,
+""".format(date_creation, heure_creation, createur, rep_scripts,
+           temp,
             sched["temp_min"], sched["temp_max"], 
             sched["type"], sched["desc"], 
             sched["duree_filtration_totale"])
@@ -631,8 +671,8 @@ def gen_crontab( sched, temp ):
     it=0
     nb_items = len(sched["scheds"])
     while it < nb_items:
-        sep()
-        print("{} {} -> {} sur {}".format(sched["scheds"][it]["heure"], sched["scheds"][it]["minutes"], 
+        sep_dbg()
+        _msg_dbg("{} {} -> {} sur {}".format(sched["scheds"][it]["heure"], sched["scheds"][it]["minutes"], 
                                           sched["scheds"][it]["action"], sched["scheds"][it]["objet"]))
         script = "{}/{}-{}-{}.{}".format(rep_scripts, rac_script, sched["scheds"][it]["objet"], sched["scheds"][it]["action"], ext_script)
         crontab_str += """{} {} * * * {}
@@ -647,10 +687,13 @@ def gen_crontab( sched, temp ):
 def display_schedule(sched):
     """
         display_schedule(sched): Affiche le contenu d'un schedule (ou une liste)
-        arg : schedule ou liste de schedules
-     TODO: faire un chronogrtamme
+        arg : schedule
+        return: string -> pour _mylog() par exemple 
+     TODO:liste de schedules
+     TODO: faire un chronogramme
     """
-    pprint.pprint(sched)
+    ret = pprint.pformat(object = sched, indent = 2, width = 100, depth = 3, sort_dicts = True )
+    return ret
 
 
 def get_temp_domoticz (device_rid):
@@ -697,40 +740,65 @@ def get_temp_domoticz (device_rid):
 
 
 
-## -=-=-=-=-=- MAIN -=-=-=-=-=-
+
+
+## -+- MAIN -+-
 
 monenv = MonEnv()
 my_function_name = "main"
 _mylog(my_function_name, "INFO", "Démarrage ....")    
 
+_mylog(my_function_name, "INFO", "Mode debug : {}".format(mode_debug))
+
+
+# mode_debug = True
+# _mylog(my_function_name, "INFO", "Mode debug : {}".format(mode_debug))
+
+
 if mode_debug:
-    print("user : '{}'".format(monenv.get_user()))
-    print("pwd : '{}'".format(monenv.get_pwd()))
-    print("repscripts : '{}'".format(monenv.get_scripts_dir()))
+    _msg_dbg("user : '{}'".format(monenv.get_user()))
+    _msg_dbg("pwd : '{}'".format(monenv.get_pwd()))
+    _msg_dbg("repscripts : '{}'".format(monenv.get_scripts_dir()))
 
 ## check qqs valeurs
 ## mode_debug = not mode_debug
 
 if mode_debug:
-    _msg_dbg(type(schedule))
-    pprint.pprint(schedule)
-    _msg_dbg(type(schedule[2]["scheds"][1]))
-    _msg_dbg((schedule[2]["scheds"][1]))
+    display_schedule(schedule)
+    # _msg_dbg(type(schedule))
+    # pprint.pprint(schedule)
+    # _msg_dbg(type(schedule[2]["scheds"][1]))
+    # _msg_dbg((schedule[2]["scheds"][1]))
+
 ## mode_debug = not mode_debug
 
 
-## 
+## Test de chargement et sauvegarde du schedule
+
 if mode_debug:
-
-    gen_schedule_file_json(schedule, 'schedules1.json')
+    json_file_saved1 = "schedules1.json"
+    json_file_orig = "schedules.json"
+    _msg_dbg("Test : sauve schedule vers '{}'".format(json_file_saved1))
+    gen_schedule_file_json(schedule, json_file_saved1)
         
-    schedule2 = gen_schedule_from_file("schedules.json")
+    _msg_dbg("Test : charge schedule depuis '{}'".format(json_file_orig))
+    schedule2 = gen_schedule_from_file(json_file_orig)
 
-    display_schedule(schedule)
+    _msg_dbg(
+"""schedule du source :
+---------------------------------------------------------------------------
+{}
+---------------------------------------------------------------------------
+""".format(display_schedule(schedule)))
 
-    sep()
+    _msg_dbg(
+"""schedule charge depuis '{}' :
+---------------------------------------------------------------------------
+{}
+---------------------------------------------------------------------------
+""".format(json_file_orig, display_schedule(schedule2)))
 
-    display_schedule(schedule2)
+    sep_dbg()
 
 
 temp = get_temp_domoticz(domoticz_temp_device_rid)
@@ -738,11 +806,10 @@ temp = get_temp_domoticz(domoticz_temp_device_rid)
 ## temp = 9.9
 ## temp = 10
 
-
-print("Temperature : '{}'".format(temp))
+_mylog(my_function_name, "INFO", "Temperature : '{}'".format(temp))
 
 sched_courant = gen_schedule_par_temp(temp)
-display_schedule(sched_courant)
+_msg_dbg(display_schedule(sched_courant))
 
 macrontab = gen_crontab(sched_courant, temp)
 

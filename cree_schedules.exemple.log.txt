@@ -1,0 +1,182 @@
+[20230429_205253.436:    0-main-INFO] Démarrage ....
+[20230429_205253.437:    1-get_temp_domoticz-INFO] Recupere la temperature de l'eau de la piscine via Domoticz
+Temperature : '19.2'
+[20230429_205253.445:    2-gen_schedule_par_temp-INFO] renvoie un schedule fonction d'une temperature 19.2
+cherche temp '19.2' parmi les 7 schedules
+[20230429_205253.445:    3- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+<class 'dict'>
+{'desc': 'temp inf a 10°C',
+ 'duree_filtration_totale': '2',
+ 'scheds': [{'action': 'start',
+             'heure': '04',
+             'minutes': '00',
+             'objet': 'pompeV1'},
+            {'action': 'stop',
+             'heure': '06',
+             'minutes': '00',
+             'objet': 'pompeV1'}],
+ 'temp_max': '10',
+ 'temp_min': '-100',
+ 'type': 'hiver'}
+NON pas dans la plage 0
+[20230429_205253.445:    4- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+<class 'dict'>
+{'desc': 'temp entre 10°C et 12°C',
+ 'duree_filtration_totale': '4',
+ 'scheds': [{'action': 'start',
+             'heure': '03',
+             'minutes': '00',
+             'objet': 'pompeV1'},
+            {'action': 'stop',
+             'heure': '07',
+             'minutes': '00',
+             'objet': 'pompeV1'}],
+ 'temp_max': '12',
+ 'temp_min': '10',
+ 'type': 'type2'}
+NON pas dans la plage 1
+[20230429_205253.445:    5- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+<class 'dict'>
+{'desc': 'temp entre 12°C et 16°C',
+ 'duree_filtration_totale': '7',
+ 'scheds': [{'action': 'start',
+             'heure': '00',
+             'minutes': '00',
+             'objet': 'pompeV1'},
+            {'action': 'stop',
+             'heure': '04',
+             'minutes': '00',
+             'objet': 'pompeV1'},
+            {'action': 'start',
+             'heure': '11',
+             'minutes': '30',
+             'objet': 'pompeV4'},
+            {'action': 'stop',
+             'heure': '14',
+             'minutes': '30',
+             'objet': 'pompeV4'},
+            {'action': 'start',
+             'heure': '12',
+             'minutes': '00',
+             'objet': 'polaris'},
+            {'action': 'stop',
+             'heure': '14',
+             'minutes': '00',
+             'objet': 'polaris'}],
+ 'temp_max': '16',
+ 'temp_min': '12',
+ 'type': 'type3'}
+NON pas dans la plage 2
+[20230429_205253.445:    6- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+<class 'dict'>
+{'desc': 'temp entre 16°C et 24°C',
+ 'duree_filtration_totale': '8 a 12',
+ 'scheds': [{'action': 'start',
+             'heure': '08',
+             'minutes': '00',
+             'objet': 'pompeV2'},
+            {'action': 'stop',
+             'heure': '11',
+             'minutes': '30',
+             'objet': 'pompeV2'},
+            {'action': 'start',
+             'heure': '11',
+             'minutes': '30',
+             'objet': 'pompeV4'},
+            {'action': 'stop',
+             'heure': '14',
+             'minutes': '30',
+             'objet': 'pompeV4'},
+            {'action': 'start',
+             'heure': '14',
+             'minutes': '30',
+             'objet': 'pompeV3'},
+            {'action': 'stop',
+             'heure': '20',
+             'minutes': '00',
+             'objet': 'pompeV3'},
+            {'action': 'start',
+             'heure': '12',
+             'minutes': '00',
+             'objet': 'polaris'},
+            {'action': 'stop',
+             'heure': '14',
+             'minutes': '00',
+             'objet': 'polaris'}],
+ 'temp_max': '24',
+ 'temp_min': '16',
+ 'type': 'type4'}
+OK plage 3
+OK on a trouve it=3 desc 'temp entre 16°C et 24°C'
+{'desc': 'temp entre 16°C et 24°C',
+ 'duree_filtration_totale': '8 a 12',
+ 'scheds': [{'action': 'start',
+             'heure': '08',
+             'minutes': '00',
+             'objet': 'pompeV2'},
+            {'action': 'stop',
+             'heure': '11',
+             'minutes': '30',
+             'objet': 'pompeV2'},
+            {'action': 'start',
+             'heure': '11',
+             'minutes': '30',
+             'objet': 'pompeV4'},
+            {'action': 'stop',
+             'heure': '14',
+             'minutes': '30',
+             'objet': 'pompeV4'},
+            {'action': 'start',
+             'heure': '14',
+             'minutes': '30',
+             'objet': 'pompeV3'},
+            {'action': 'stop',
+             'heure': '20',
+             'minutes': '00',
+             'objet': 'pompeV3'},
+            {'action': 'start',
+             'heure': '12',
+             'minutes': '00',
+             'objet': 'polaris'},
+            {'action': 'stop',
+             'heure': '14',
+             'minutes': '00',
+             'objet': 'polaris'}],
+ 'temp_max': '24',
+ 'temp_min': '16',
+ 'type': 'type4'}
+[20230429_205253.446:    7-gen_crontab-INFO] On cree une chaine crontab depuis l'objet Schedule trouvé
+[20230429_205253.446:    8- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+08 00 -> start sur pompeV2
+[20230429_205253.446:    9- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+11 30 -> stop sur pompeV2
+[20230429_205253.446:   10- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+11 30 -> start sur pompeV4
+[20230429_205253.446:   11- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+14 30 -> stop sur pompeV4
+[20230429_205253.446:   12- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+14 30 -> start sur pompeV3
+[20230429_205253.446:   13- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+20 00 -> stop sur pompeV3
+[20230429_205253.446:   14- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+12 00 -> start sur polaris
+[20230429_205253.446:   15- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+14 00 -> stop sur polaris
+[20230429_205253.446:   16- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+## Schedule genere le 2023/04/10 a 18h45 par moimoi
+## Temp mesuree : 19.2
+## Schedule pour temps entre 16 et 24
+## desc du schedule de type type4 : temp entre 16°C et 24°C
+## nb d'heures de filtration : 8 a 12
+##
+
+00 08 * * * /home/scripts/sched-pompeV2-start.sh
+30 11 * * * /home/scripts/sched-pompeV2-stop.sh
+30 11 * * * /home/scripts/sched-pompeV4-start.sh
+30 14 * * * /home/scripts/sched-pompeV4-stop.sh
+30 14 * * * /home/scripts/sched-pompeV3-start.sh
+00 20 * * * /home/scripts/sched-pompeV3-stop.sh
+00 12 * * * /home/scripts/sched-polaris-start.sh
+00 14 * * * /home/scripts/sched-polaris-stop.sh
+
+[20230429_205253.446:   17- --] =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
